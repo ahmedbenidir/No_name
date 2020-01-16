@@ -3,7 +3,7 @@ import random
 pg.init()
 
 win = pg.display.set_mode((800,480))
-pg.display.set_caption('First game')
+pg.display.set_caption('The killer')
 
 walkRight = [pg.image.load('img/hero/R1.png'), pg.image.load('img/hero/R2.png'), pg.image.load('img/hero/R3.png'), pg.image.load('img/hero/R4.png'), pg.image.load('img/hero/R5.png'), pg.image.load('img/hero/R6.png'), pg.image.load('img/hero/R7.png'), pg.image.load('img/hero/R8.png'), pg.image.load('img/hero/R9.png')]
 walkLeft = [pg.image.load('img/hero/L1.png'), pg.image.load('img/hero/L2.png'), pg.image.load('img/hero/L3.png'), pg.image.load('img/hero/L4.png'), pg.image.load('img/hero/L5.png'), pg.image.load('img/hero/L6.png'), pg.image.load('img/hero/L7.png'), pg.image.load('img/hero/L8.png'), pg.image.load('img/hero/L9.png')]
@@ -117,6 +117,7 @@ class enemy(object):
                 win.blit(self.walkLeft[self.walkCount//3], (self.x,self.y))
                 self.walkCount += 1
             self.hitbox = (self.x + 17, self.y + 2, 31, 57) # NEW
+
             #pg.draw.rect(win, (255,0,0), self.hitbox,2) # Draws the hit box around the enemy
             pg.draw.rect(win, (255,0,0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10)) # NEW
             pg.draw.rect(win, (0,128,0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (50 * (1 - self.health)), 10)) # NEW
@@ -161,8 +162,8 @@ def redrawGameWindow():
 #mainloop
 font = pg.font.SysFont('comicsans', 20, True)
 man = player(400, 404, 64,64)
-goblin = enemy(random.randrange(0, 499), 410, 64, 64, random.randrange(500, 720))
-goblin2 = enemy(720, 410, 64, 64, 50)
+goblin = enemy(random.randrange(0, 710), 410, 64, 64, 720)
+goblin2 = enemy(random.randrange(0, 710), 410, 64, 64, 720)
 bullets = []
 shootLoop = 0
 run = True
@@ -170,9 +171,9 @@ while run:
     clock.tick(27)
 
     if goblin.visible == False:
-        goblin = enemy(random.randrange(0, 720), 410, 64, 64, random.randrange(0, 720))
+        goblin = enemy(random.randrange(0, 710), 410, 64, 64, 720)
     if goblin2.visible == False:
-        goblin2 = enemy(random.randrange(0, 720), 410, 64, 64, random.randrange(0, 720))
+        goblin2 = enemy(random.randrange(0, 710), 410, 64, 64, 720)
 
     if goblin.visible == True:
         if man.hitbox[1] < goblin.hitbox[1] + goblin.hitbox[3] and man.hitbox[1] + man.hitbox[3] > goblin.hitbox[1]:
@@ -181,7 +182,9 @@ while run:
                 if score <= 0:
                     score = 0
                 else:
-                    score -= 1
+                    score = 0
+                    #score -= 1
+
             # This will go at the top of or main loop.
     if goblin2.visible == True:
         if man.hitbox[1] < goblin2.hitbox[1] + goblin2.hitbox[3] and man.hitbox[1] + man.hitbox[3] > goblin2.hitbox[1]:
@@ -207,7 +210,7 @@ while run:
                 if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]: # Checks y coords
                     goblin.hit() # calls enemy hit method
                     score += 1
-                    hitSound.play()
+                    #hitSound.play() #uncomment this line if you would play hitting sound
                     bullets.pop(bullets.index(bullet)) # removes bullet from bullet list
 
         if goblin2.visible == True:
@@ -215,7 +218,7 @@ while run:
                 if bullet.x + bullet.radius > goblin2.hitbox[0] and bullet.x - bullet.radius < goblin2.hitbox[0] + goblin2.hitbox[2]: # Checks y coords
                     goblin2.hit() # calls enemy hit method
                     score += 1
-                    hitSound.play()
+                    #hitSound.play() #uncomment this line if you would play hitting sound
                     bullets.pop(bullets.index(bullet)) # removes bullet from bullet list
 
         if bullet.x < 800 and bullet.x > 0:
@@ -226,7 +229,7 @@ while run:
     keys = pg.key.get_pressed()
 
     if keys[pg.K_SPACE] and shootLoop == 0:
-        bulletSound.play()
+        #bulletSound.play() #uncomment this line if you would play projectile sound
         if man.left:
             facing = -1
         else:
